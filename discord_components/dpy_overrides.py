@@ -5,7 +5,6 @@ from discord import (
     Embed,
     Attachment,
     AllowedMentions,
-    InvalidArgument,
     File,
     MessageFlags,
 )
@@ -66,7 +65,7 @@ class ComponentMessage(Message):
             data["content"] = content
 
         if embed is not None and embeds is not None:
-            raise InvalidArgument("cannot pass both embed and embeds parameter to edit()")
+            raise TypeError("cannot pass both embed and embeds parameter to edit()")
 
         if embed is not None:
             data["embeds"] = [embed.to_dict()]
@@ -238,14 +237,14 @@ async def send(
     content = str(content) if content is not None else None
 
     if embed is not None and embeds is not None:
-        raise InvalidArgument("cannot pass both embed and embeds parameter to send()")
+        raise TypeError("cannot pass both embed and embeds parameter to send()")
 
     if embed is not None:
         embeds = [embed.to_dict()]
 
     elif embeds is not None:
         if len(embeds) > 10:
-            raise InvalidArgument("embeds parameter must be a list of up to 10 elements")
+            raise TypeError("embeds parameter must be a list of up to 10 elements")
         embeds = [embed.to_dict() for embed in embeds]
 
     if stickers is not None:
@@ -267,7 +266,7 @@ async def send(
         try:
             reference = reference.to_message_reference_dict()
         except AttributeError:
-            raise InvalidArgument(
+            raise TypeError(
                 "reference parameter must be Message or MessageReference"
             ) from None
 
@@ -275,11 +274,11 @@ async def send(
         components = _get_components_json(components)
 
     if file is not None and files is not None:
-        raise InvalidArgument("cannot pass both file and files parameter to send()")
+        raise TypeError("cannot pass both file and files parameter to send()")
 
     if file is not None:
         if not isinstance(file, File):
-            raise InvalidArgument("file parameter must be File")
+            raise TypeError("file parameter must be File")
 
         try:
             data = await state.http.send_files(
@@ -300,9 +299,9 @@ async def send(
 
     elif files is not None:
         if len(files) > 10:
-            raise InvalidArgument("files parameter must be a list of up to 10 elements")
+            raise TypeError("files parameter must be a list of up to 10 elements")
         elif not all(isinstance(file, File) for file in files):
-            raise InvalidArgument("files parameter must be a list of File")
+            raise TypeError("files parameter must be a list of File")
 
         try:
             data = await state.http.send_files(
