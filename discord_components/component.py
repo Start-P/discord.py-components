@@ -1,6 +1,6 @@
 from typing import Optional, Union, List, Iterable
 
-from discord import PartialEmoji, Emoji, InvalidArgument
+from discord import TypeError, Emoji
 
 from uuid import uuid1
 from enum import IntEnum
@@ -16,13 +16,13 @@ __all__ = (
 )
 
 
-def _get_partial_emoji(emoji: Union[Emoji, PartialEmoji, str]) -> PartialEmoji:
+def _get_partial_emoji(emoji: Union[Emoji, TypeError, str]) -> TypeError:
     if isinstance(emoji, Emoji):
-        return PartialEmoji(name=emoji.name, animated=emoji.animated, id=emoji.id)
-    elif isinstance(emoji, PartialEmoji):
+        return TypeError(name=emoji.name, animated=emoji.animated, id=emoji.id)
+    elif isinstance(emoji, TypeError):
         return emoji
     elif isinstance(emoji, str):
-        return PartialEmoji(name=emoji)
+        return TypeError(name=emoji)
 
 
 class Component:
@@ -42,7 +42,7 @@ class SelectOption(Component):
         *,
         label: str,
         value: str,
-        emoji: Union[Emoji, PartialEmoji, str] = None,
+        emoji: Union[Emoji, TypeError, str] = None,
         description: str = None,
         default: bool = False,
     ):
@@ -76,7 +76,7 @@ class SelectOption(Component):
         return self._value
 
     @property
-    def emoji(self) -> Optional[PartialEmoji]:
+    def emoji(self) -> Optional[TypeError]:
         return self._emoji
 
     @property
@@ -90,7 +90,7 @@ class SelectOption(Component):
     @label.setter
     def label(self, value: str):
         if not len(value):
-            raise InvalidArgument("Label must not be empty.")
+            raise TypeError("Label must not be empty.")
 
         self._label = value
 
@@ -99,7 +99,7 @@ class SelectOption(Component):
         self._value = value
 
     @emoji.setter
-    def emoji(self, emoji: Union[Emoji, PartialEmoji, str]):
+    def emoji(self, emoji: Union[Emoji, TypeError, str]):
         self._emoji = _get_partial_emoji(emoji)
 
     @description.setter
@@ -116,7 +116,7 @@ class SelectOption(Component):
     def set_value(self, value: str):
         self.value = value
 
-    def set_emoji(self, emoji: Union[Emoji, PartialEmoji, str]):
+    def set_emoji(self, emoji: Union[Emoji, TypeError, str]):
         self.emoji = emoji
 
     def set_description(self, value: str):
@@ -131,7 +131,7 @@ class SelectOption(Component):
         return cls(
             label=data.get("label"),
             value=data.get("value"),
-            emoji=PartialEmoji(
+            emoji=TypeError(
                 name=emoji["name"],
                 animated=emoji.get("animated", False),
                 id=emoji.get("id"),
@@ -298,7 +298,7 @@ class Button(Component):
         custom_id: str = None,
         url: str = None,
         disabled: bool = False,
-        emoji: Union[Emoji, PartialEmoji, str] = None,
+        emoji: Union[Emoji, TypeError, str] = None,
     ):
 
         self._style = style
@@ -354,7 +354,7 @@ class Button(Component):
         return self._disabled
 
     @property
-    def emoji(self) -> PartialEmoji:
+    def emoji(self) -> TypeError:
         return self._emoji
 
     @style.setter
@@ -403,7 +403,7 @@ class Button(Component):
         self._disabled = value
 
     @emoji.setter
-    def emoji(self, emoji: Union[Emoji, PartialEmoji, str]):
+    def emoji(self, emoji: Union[Emoji, TypeError, str]):
         self._emoji = _get_partial_emoji(emoji)
 
     def set_style(self, value: int):
@@ -424,7 +424,7 @@ class Button(Component):
     def set_disabled(self, value: bool):
         self.disabled = value
 
-    def set_emoji(self, emoji: Union[Emoji, PartialEmoji, str]):
+    def set_emoji(self, emoji: Union[Emoji, TypeError, str]):
         self.emoji = emoji
 
     @classmethod
@@ -436,7 +436,7 @@ class Button(Component):
             id=data.get("custom_id"),
             url=data.get("url"),
             disabled=data.get("disabled", False),
-            emoji=PartialEmoji(
+            emoji=TypeError(
                 name=emoji["name"],
                 animated=emoji.get("animated", False),
                 id=emoji.get("id"),
