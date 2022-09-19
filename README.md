@@ -9,6 +9,7 @@
 </div>
 <p align="center">
     <h3>An unofficial third party library of discord.py for discord components.</h3>
+    <h3>This fork works in discord.py v2.x .</h3>
 </p>
 
 ## Welcome!
@@ -37,7 +38,7 @@ if you have any questions, feel free to ask it on this server.
 ## Install
 
 ```
-pip install --upgrade discord-components
+pip install --upgrade git+https://github.com/Start-P/discord.py-components
 ```
 
 ## Example
